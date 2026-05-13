@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8" />
+
+  <title>Vyuha SOS</title>
+
+  <!-- STYLE -->
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 28px;
+    }
+    @media (max-width:900px){
+      .topbar{padding:12px 16px}
+    }
+    @media (max-width:600px){
+      .topbar{padding:10px 12px}
+    }
+  </style>
+
+  <!-- LEAFLET -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet/dist/leaflet.css"
+  />
+
+  <!-- SOCKET -->
+  <script src="/socket.io/socket.io.js"></script>
+
+</head>
+
+<body>
+
+
+  <!-- TOPBAR -->
+
+  <header class="topbar">
+
+    <div class="status">
+
+      <span id="connectionDot"></span>
+
+      <p id="connectionText">
+        Connected
+      </p>
+
+    </div>
+
+  </header>
+
+  <!-- MAIN -->
+
+  <main class="main">
+
+    <h1>Emergency SOS</h1>
+
+    <p class="subtitle">
+      Broadcast your emergency location instantly
+    </p>
+
+    <!-- SOS BUTTON -->
+
+    <div class="sos-container">
+
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+
+      <button
+        class="sos-button"
+        onclick="triggerSOS()"
+      >
+        SOS
+      </button>
+
+    </div>
+
+    <!-- AI RISK -->
+
+    <div class="risk-card">
+
+      <h3>AI RISK ASSESSMENT</h3>
+
+      <div
+        id="riskLevel"
+        class="risk low"
+      >
+        LOW
+      </div>
+
+    </div>
+
+    <!-- BROADCAST -->
+
+    <div class="broadcast-panel">
+
+      <p id="broadcastText">
+        Awaiting emergency transmission...
+      </p>
+
+    </div>
+
+    <!-- LIVE FEED -->
+
+<div class="live-feed">
+
+  <h3>
+    LIVE CRISIS FEED
+  </h3>
+
+  <div id="feedContainer">
+
+    Awaiting live events...
+
+  </div>
+
+</div>
+
+    <!-- MAP -->
+
+<!-- MAP -->
+
+<div class="map-section">
+
+  <div id="map"></div>
+
+  <!-- MAP LEGEND -->
+
+ <div class="map-legend">
+
+  <div class="legend-item">
+
+    <div
+      class="legend-color earthquake"
+    ></div>
+
+    Earthquake Zone
+
+  </div>
+
+  <div class="legend-item">
+
+    <div
+      class="legend-color tsunami"
+    ></div>
+
+    Coastal / Tsunami Zone
+
+  </div>
+
+  <div class="legend-item">
+
+    <div
+      class="legend-color sos"
+    ></div>
+
+    Active SOS Signal
+
+  </div>
+
+</div>
+  </main>
+
+  <!-- LEAFLET -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <!-- SCRIPT -->
+  <script src="script.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Shelter-1",
+    "type": "shelter",
+    "lat": 15.4,
+    "lon": 78.4,
+    "available": true,
+    "verified": true
+  },
+  {
+    "name": "Hospital-A",
+    "type": "medical",
+    "lat": 15.6,
+    "lon": 78.6,
+    "available": true,
+    "verified": true
+  },
+  {
+    "name": "Food Center",
+    "type": "food",
+    "lat": 16.1,
+    "lon": 79.1,
+    "available": true,
+    "verified": true
+  },
+  {
+    "name": "Rescue Team",
+    "type": "rescue",
+    "lat": 15.7,
+    "lon": 78.7,
+    "available": true,
+    "verified": true
+  },
+  {
+    "name": "Police Station",
+    "type": "police",
+    "lat": 15.8,
+    "lon": 78.8,
+    "available": true,
+    "verified": true
+  }
+]

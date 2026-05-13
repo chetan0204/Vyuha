@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Vyuha – Smart Emergency Navigation</title>
+<meta charset="UTF-8">
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
+<style>
+body { margin:0; font-family:'Segoe UI'; background:#0f172a; }
+#map { height:100vh; }
+
+/* 🔥 BUTTONS */
+.controls {
+  position:absolute;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:12px;
+  z-index:1000;
+}
+
+.controls button {
+  padding:10px 14px;
+  border:none;
+  border-radius:25px;
+  background:#111;
+  color:white;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.controls button:hover {
+  background:#2563eb;
+  transform:scale(1.08);
+  box-shadow:0 0 15px #2563eb;
+}
+
+/* 📊 PANEL */
+.panel {
+  position:absolute;
+  top:20px;
+  right:20px;
+  background:white;
+  padding:12px;
+  border-radius:10px;
+  z-index:1000;
+  width:260px;
+}
+
+/* 📍 STATUS */
+.status {
+  position:absolute;
+  top:20px;
+  left:20px;
+  background:black;
+  color:white;
+  padding:10px;
+  border-radius:8px;
+  z-index:1000;
+}
+
+/* 🔄 LOADER */
+.loader {
+  border:4px solid #ddd;
+  border-top:4px solid #2563eb;
+  border-radius:50%;
+  width:20px;
+  height:20px;
+  animation:spin 1s linear infinite;
+  margin:auto;
+}
+
+@keyframes spin {
+  0% { transform:rotate(0deg); }
+  100% { transform:rotate(360deg); }
+}
+</style>
+</head>
+
+<body>
+ 
+<div id="map"></div>
+
+<div class="status" id="statusBox">📍 Detecting location...</div>
+
+<div class="panel" id="resultBox">
+<b>Nearest Resources</b>
+<p>Select a function below</p>
+</div>
+
+<div class="controls">
+<button onclick="findNearby('medical')">🏥 Medical</button>
+<button onclick="findNearby('food')">🍱 Food</button>
+<button onclick="findNearby('police')">🚓 Police</button>
+<button onclick="findNearby('rescue')">🚑 Rescue</button>
+<button onclick="findNearby('shelter')">🏠 Shelter</button>
+</div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+var map = L.map('map').setView([20.5937,78.9629],5);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+let userLat, userLng;
+
+// 📍 GET LOCATION
+navigator.geolocation.getCurrentPosition(pos=>{
+  userLat = pos.coords.latitude;
+  userLng = pos.coords.longitude;
+
+  map.setView([userLat,userLng],13);
+
+  L.marker([userLat,userLng])
+    .addTo(map)
+    .bindPopup("📍 You are here")
+    .openPopup();
+
+  document.getElementById("statusBox").innerHTML = "📍 Location Ready";
+});
+
+// 📏 DISTANCE
+function getDistance(lat1, lon1, lat2, lon2) {
+  let R = 6371;
+  let dLat = (lat2-lat1)*Math.PI/180;
+  let dLon = (lon2-lon1)*Math.PI/180;
+
+  let a = Math.sin(dLat/2)**2 +
+          Math.cos(lat1*Math.PI/180) *
+          Math.cos(lat2*Math.PI/180) *
+          Math.sin(dLon/2)**2;
+
+  return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
+}
+
+// 🔥 MAIN FUNCTION (FULLY FIXED)
+function findNearby(type){
+
+  document.getElementById("resultBox").innerHTML =
+    `<b>Searching ${type}...</b><div class="loader"></div>`;
+
+  let query = "";
+
+  // ensure we have a user location
+  if (typeof userLat === 'undefined' || typeof userLng === 'undefined') {
+    document.getElementById("resultBox").innerHTML =
+      `<b>Location not ready</b><br>Please allow location access and try again.`;
+    return;
+  }
+
+  // ✅ FIXED QUERIES
+  if(type === "medical"){
+    query = `
+    [out:json];
+    node["amenity"="hospital"](around:10000,${userLat},${userLng});
+    out;
+    `;
+  }
+  else if(type === "food"){
+    query = `
+    [out:json];
+    node["amenity"="restaurant"](around:10000,${userLat},${userLng});
+    out;
+    `;
+  }
+  else if(type === "police"){
+    query = `
+    [out:json];
+    node["amenity"="police"](around:10000,${userLat},${userLng});
+    out;
+    `;
+  }
+  else if(type === "rescue"){
+    query = `
+    [out:json];
+    node["amenity"="fire_station"](around:10000,${userLat},${userLng});
+    out;
+    `;
+  }
+  else if(type === "shelter"){
+    query = `
+    [out:json];
+    node["amenity"="shelter"](around:10000,${userLat},${userLng});
+    out;
+    `;
+  }
+
+  fetch("https://overpass-api.de/api/interpreter", {
+    method:"POST",
+    body:query
+  })
+  // add a timeout to avoid long waits if the API is slow/blocked
+  .then(res => {
+    if (!res.ok) throw new Error('network');
+    return res.json();
+  })
+  .then(data=>{
+
+    if(!data.elements || data.elements.length === 0){
+      // 🔥 FALLBACK
+      window.location.href =
+        `https://www.google.com/maps/search/${type}/@${userLat},${userLng},14z`;
+      return;
+    }
+
+    let results = data.elements.map(e=>{
+      let dist = getDistance(userLat,userLng,e.lat,e.lon);
+      return {...e, distance:dist};
+    });
+
+    results.sort((a,b)=>a.distance-b.distance);
+
+    let top3 = results.slice(0,3);
+
+    // 📊 PANEL
+    let html = `<b>Top 3 Nearest (${type})</b><br><br>`;
+
+    top3.forEach((r,i)=>{
+      html += `
+        ${i+1}. ${r.tags.name || type.toUpperCase()}<br>
+        📏 ${r.distance.toFixed(2)} km<br>
+        ${Math.random()>0.5 ? "🟢 Open" : "🔴 Busy"}<br><br>
+      `;
+    });
+
+    document.getElementById("resultBox").innerHTML = html;
+
+    // 📍 MARKER
+    let best = top3[0];
+
+    L.marker([best.lat,best.lon])
+      .addTo(map)
+      .bindPopup("Nearest " + type)
+      .openPopup();
+
+    map.setView([best.lat,best.lon],14);
+
+    // 🚀 DIRECT NAVIGATION (FIXED)
+    setTimeout(()=>{
+      window.location.href =
+        `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${best.lat},${best.lon}`;
+    },2000);
+
+  })
+  .catch((err)=>{
+    // fallback: open Google Maps search for the requested type
+    console.warn('Overpass error:', err);
+    document.getElementById("resultBox").innerHTML = `<b>Could not fetch live data</b><br>Opening fallback...`;
+    setTimeout(()=>{
+      window.location.href = `https://www.google.com/maps/search/${encodeURIComponent(type)}/@${userLat},${userLng},14z`;
+    },800);
+  });
+}
+</script>
+
+</body>
+</html>

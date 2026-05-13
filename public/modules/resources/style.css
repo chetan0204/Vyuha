@@ -1,0 +1,39 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+h2 {
+    text-align: center;
+    color: red;
+}
+
+.container {
+    display: flex;
+}
+
+.sidebar {
+    width: 25%;
+    height: 100vh;
+    background: #f4f4f4;
+    padding: 15px;
+    overflow-y: auto;
+}
+
+#map {
+    width: 75%;
+    height: 100vh;
+}
+
+#resourceList {
+    list-style: none;
+    padding: 0;
+}
+
+#resourceList li {
+    background: white;
+    margin: 5px 0;
+    padding: 8px;
+    border-radius: 5px;
+}
+

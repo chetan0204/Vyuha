@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Vyuha P2P</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+
+    <div class="container">
+
+        <h1>Vyuha Crisis Communication</h1>
+
+        <button id="joinBtn">
+            Join Emergency Room
+        </button>
+
+        <div class="status" id="status">
+            Not Connected
+        </div>
+
+        <div class="chat-box" id="chatBox"></div>
+
+        <div class="input-area">
+
+            <input 
+                type="text"
+                id="messageInput"
+                placeholder="Type emergency message..."
+            >
+
+            <button id="sendBtn">
+                Send
+            </button>
+            <button id="locationBtn">
+    Share Location
+</button>
+
+        </div>
+
+    </div>
+
+    <script>
+    (function () {
+      try {
+        var q = new URLSearchParams(location.search).get("socketUrl");
+        window.__VYUHA_P2P__ = q ? decodeURIComponent(q).replace(/\/+$/, "") : "";
+      } catch (e) {
+        window.__VYUHA_P2P__ = "";
+      }
+    })();
+    </script>
+    <script>
+    (function () {
+      var api = window.__VYUHA_P2P__ || "";
+      var base = api || (window.location.origin || "");
+      var s = document.createElement("script");
+      s.src = base + "/socket.io/socket.io.js";
+      s.onload = function () {
+        var a = document.createElement("script");
+        a.src = "app.js";
+        document.body.appendChild(a);
+      };
+      s.onerror = function () {
+        var el = document.getElementById("status");
+        if (el) {
+          el.textContent =
+            "Cannot reach Communication server. From the project folder run: npm run dev (then open http://localhost:5500/) or: cd vyuha-p2p && node server.js";
+        }
+      };
+      document.head.appendChild(s);
+    })();
+    </script>
+
+</body>
+
+</html>

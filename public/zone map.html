@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Vyuha - Crisis Intelligence</title>
+  <meta charset="UTF-8">
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css"/>
+
+  <style>
+    body { margin:0; font-family: 'Segoe UI'; background:#0f172a; }
+    #map { height:100vh; }
+
+    /* FIXED PANELS (VISIBLE) */
+    .panel {
+      position:absolute;
+      bottom:20px;
+      right:20px;
+      background:#000;
+      color:white;
+      padding:15px;
+      border-radius:12px;
+      z-index:1000;
+      box-shadow:0 0 20px rgba(0,0,0,0.5);
+    }
+
+    .tips {
+      position:absolute;
+      bottom:20px;
+      left:20px;
+      background:#ffffff;
+      color:#000;
+      padding:15px;
+      border-radius:12px;
+      z-index:1000;
+      width:260px;
+      box-shadow:0 0 20px rgba(0,0,0,0.5);
+    }
+
+    .marker {
+      width:32px;
+      height:32px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:white;
+      font-size:14px;
+      animation:pulse 1.5s infinite;
+    }
+
+    .danger {
+      background:#ff3b3b;
+      box-shadow:0 0 20px #ff3b3b;
+    }
+
+    .safe {
+      background:#00c853;
+      box-shadow:0 0 20px #00c853;
+    }
+
+    .user {
+      background:#2979ff;
+      box-shadow:0 0 20px #2979ff;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.5); opacity:0.6; }
+      100% { transform: scale(1); }
+    }
+  </style>
+</head>
+
+<body>
+
+<div id="map"></div>
+
+<div class="panel" id="statusBox">Detecting location...</div>
+
+<div class="tips" id="tipsPanel">
+  <b>🧠 Safety Guidance</b>
+  <p>Click zones to see precautions</p>
+</div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+
+<script>
+  var map = L.map('map').setView([20,0],2);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+  function createIcon(type){
+    let symbol = type==="danger"?"⚠":type==="safe"?"🛡":"📡";
+    return L.divIcon({
+      className:"",
+      html:`<div class="marker ${type}">${symbol}</div>`
+    });
+  }
+
+  var dangerIcon = createIcon("danger");
+  var safeIcon = createIcon("safe");
+  var userIcon = createIcon("user");
+
+  var dangerZones = [
+    {lat:28.6139, lng:77.2090},
+    {lat:34.0522, lng:-118.2437}
+  ];
+
+  var safeZones = [
+    {lat:19.0760, lng:72.8777},
+    {lat:13.0827, lng:80.2707}
+  ];
+
+  let userLat, userLng;
+  let userZone = "";
+  let routeControl = null;
+
+  function playAlert(){
+    let audio = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
+    audio.play();
+  }
+
+  function getDistance(a,b,c,d){
+    return Math.sqrt((a-c)**2 + (b-d)**2);
+  }
+
+  function getZone(lat,lng){
+    for(let z of dangerZones){
+      if(getDistance(lat,lng,z.lat,z.lng)<5){
+        return "danger";
+      }
+    }
+    return "safe";
+  }
+
+  function getNearestSafe(lat,lng){
+    let minDist = Infinity;
+    let nearest = null;
+
+    safeZones.forEach(z=>{
+      let d = getDistance(lat,lng,z.lat,z.lng);
+      if(d < minDist){
+        minDist = d;
+        nearest = z;
+      }
+    });
+
+    return nearest;
+  }
+
+  // 🔊 REMOVED SOUND FROM HERE
+  function updateTips(zone){
+    if(zone==="danger"){
+      document.getElementById("tipsPanel").innerHTML = `
+        <b style="color:red">⚠️ DANGER ZONE</b>
+        <ul>
+          <li>Evacuate immediately</li>
+          <li>Avoid open areas</li>
+          <li>Stay indoors</li>
+          <li>Follow official alerts</li>
+        </ul>
+      `;
+    } else {
+      document.getElementById("tipsPanel").innerHTML = `
+        <b style="color:green">🟢 SAFE AREA</b>
+        <ul>
+          <li>Area stable</li>
+          <li>Stay alert</li>
+          <li>Be prepared</li>
+        </ul>
+      `;
+    }
+  }
+
+  // 📍 LOCATION FIXED
+  navigator.geolocation.getCurrentPosition(
+    pos=>{
+      userLat = pos.coords.latitude;
+      userLng = pos.coords.longitude;
+
+      userZone = getZone(userLat,userLng);
+
+      map.setView([userLat,userLng],6);
+
+      L.marker([userLat,userLng],{icon:userIcon})
+        .addTo(map)
+        .bindPopup("📍 You are here")
+        .openPopup();
+
+      updateTips(userZone);
+
+      document.getElementById("statusBox").innerHTML =
+        userZone==="danger" ? "🔴 DANGER ZONE" : "🟢 SAFE ZONE";
+    },
+    err=>{
+      alert("Location access denied. Please allow location.");
+    }
+  );
+
+  map.on('click', function(e){
+
+    let lat = e.latlng.lat;
+    let lng = e.latlng.lng;
+
+    let zone = getZone(lat,lng);
+
+    updateTips(zone);
+
+    if(routeControl){
+      map.removeControl(routeControl);
+    }
+
+    if(zone === "danger"){
+
+      playAlert(); // 🔊 ONLY HERE
+
+      let safe = getNearestSafe(lat,lng);
+
+      routeControl = L.Routing.control({
+        waypoints:[
+          L.latLng(lat,lng),
+          L.latLng(safe.lat,safe.lng)
+        ],
+        routeWhileDragging:false
+      }).addTo(map);
+
+    } else {
+      L.popup()
+        .setLatLng(e.latlng)
+        .setContent("<b style='color:green'>🟢 Safe Zone</b>")
+        .openOn(map);
+    }
+
+  });
+
+  dangerZones.forEach(z=>{
+    L.marker([z.lat,z.lng],{icon:dangerIcon}).addTo(map);
+  });
+
+  safeZones.forEach(z=>{
+    L.marker([z.lat,z.lng],{icon:safeIcon}).addTo(map);
+  });
+
+  map.on('dblclick', function(){
+
+    if(userZone!=="danger") return;
+
+    let safe = getNearestSafe(userLat,userLng);
+
+    if(routeControl){
+      map.removeControl(routeControl);
+    }
+
+    routeControl = L.Routing.control({
+      waypoints:[
+        L.latLng(userLat,userLng),
+        L.latLng(safe.lat,safe.lng)
+      ]
+    }).addTo(map);
+
+    playAlert();
+  });
+
+</script>
+
+</body>
+</html>
