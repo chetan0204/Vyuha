@@ -1024,7 +1024,7 @@ const io = new IntersectionObserver(entries => {
   });
 }, { threshold: 0.12 });
 
-  const C = window.VYUHA_CONFIG || {};
+const C = window.VYUHA_CONFIG || {};
   const server = String(C.sosUrl || "http://localhost:5000/").replace(/\/+$/, "");
   const fallback = "vyuha-sos/public/index.html";
   const timeoutMs = 1200;
