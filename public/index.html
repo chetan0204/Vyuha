@@ -1,3 +1,5 @@
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -913,6 +915,99 @@ html.modal-open, body.modal-open { overflow: hidden; }
   </div>
 </section>
 
+<!-- SOS ALERT -->
+
+<div
+  class="m-card"
+  data-mod="sos"
+  style="transition-delay:.05s"
+  onclick="window.location.href='/sos'"
+>
+
+  <div class="sos-ring"></div>
+
+  <div class="card-badge badge-critical">
+    ● Critical
+  </div>
+
+  <div class="card-icon">
+    🚨
+  </div>
+
+  <div class="card-tag">
+    Module 01 · Emergency
+  </div>
+
+  <h3 class="card-title">
+    SOS Alert
+  </h3>
+
+  <p class="card-desc">
+    Send an instant distress signal
+    with your live location, status,
+    and emergency type — reaching
+    responders and connected contacts
+    in seconds.
+  </p>
+
+  <div class="card-features">
+
+    <span class="feat-pill">
+      Live Location
+    </span>
+
+    <span class="feat-pill">
+      One-tap Alert
+    </span>
+
+    <span class="feat-pill">
+      Offline Mode
+    </span>
+
+    <span class="feat-pill">
+      SMS Fallback
+    </span>
+
+  </div>
+
+  <a
+    class="card-btn"
+    href="/sos"
+    onclick="event.stopPropagation()"
+  >
+    Open Module
+
+    <span class="arrow">
+      →
+    </span>
+  </a>
+
+  <div class="card-watermark">
+    🚨
+  </div>
+
+</div>
+  const C = window.VYUHA_CONFIG || {};
+  const server = String(C.sosUrl || "http://localhost:5000/").replace(/\/+$/, "");
+  const fallback = "vyuha-sos/public/index.html";
+  const timeoutMs = 1200;
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+
+  fetch(server + "/", { signal: controller.signal, mode: "cors" })
+    .then(() => {
+      clearTimeout(timeout);
+      window.location.href = server + "/";
+    })
+    .catch(() => {
+      clearTimeout(timeout);
+      window.location.href = fallback;
+    });
+
+document.querySelectorAll('.reveal, .m-card, .how-step').forEach(el => io.observe(el));
+
+
 <!-- ═══════════════════════════ HOW IT WORKS ═══════════════════════════ -->
 <section id="how">
   <div class="how-inner">
@@ -1022,25 +1117,6 @@ const io = new IntersectionObserver(entries => {
   });
 }, { threshold: 0.12 });
 
-const C = window.VYUHA_CONFIG || {};
-  const server = String(C.sosUrl || "http://localhost:5000/").replace(/\/+$/, "");
-  const fallback = "vyuha-sos/public/index.html";
-  const timeoutMs = 1200;
-
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), timeoutMs);
-
-  fetch(server + "/", { signal: controller.signal, mode: "cors" })
-    .then(() => {
-      clearTimeout(timeout);
-      window.location.href = server + "/";
-    })
-    .catch(() => {
-      clearTimeout(timeout);
-      window.location.href = fallback;
-    });
-
-document.querySelectorAll('.reveal, .m-card, .how-step').forEach(el => io.observe(el));
 
 // ── COUNTER
 function animCount(el, target, suffix = '') {
