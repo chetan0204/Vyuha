@@ -151,7 +151,7 @@ else if (
 ) {
 
   color =
-    "#b84dff";
+    "#42D674";
 
   radius =
     70000;
