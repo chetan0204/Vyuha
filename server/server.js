@@ -255,50 +255,6 @@ io.on(
 
     }
 
-    socket.on(
-      "offer",
-      ({ offer, to }) => {
-
-        io.to(to).emit(
-          "offer",
-          {
-            offer,
-            from: socket.id
-          }
-        );
-
-      }
-    );
-
-    socket.on(
-      "answer",
-      ({ answer, to }) => {
-
-        io.to(to).emit(
-          "answer",
-          {
-            answer,
-            from: socket.id
-          }
-        );
-
-      }
-    );
-
-    socket.on(
-      "ice-candidate",
-      ({ candidate, to }) => {
-
-        io.to(to).emit(
-          "ice-candidate",
-          {
-            candidate,
-            from: socket.id
-          }
-        );
-
-      }
-    );
 
     /* ACTIVE SOS */
 

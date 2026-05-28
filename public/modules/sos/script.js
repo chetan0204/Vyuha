@@ -84,8 +84,8 @@ async function loadDisasters() {
 
     const res =
       await fetch(
-  "https://vyuha-backend.onrender.com/api/disasters"
-)
+        "https://vyuha-backend.onrender.com/api/disasters"
+      );
 
     const data =
       await res.json();
@@ -95,27 +95,44 @@ async function loadDisasters() {
     data.forEach(
       (d) => {
 
+        /* VALIDATE */
+
+        if (
+          !d.coordinates ||
+          d.coordinates.lat == null ||
+          d.coordinates.lng == null
+        ) {
+
+          return;
+        }
+
         let color =
           "#00ff99";
 
         let radius =
           50000;
 
+        /* DISASTER TYPE */
+
         if (
-          d.type ===
+          d.type &&
+          d.type.toLowerCase() ===
           "earthquake"
         ) {
 
           color =
-            "#ffb347";
+            "#FFD93D";
 
           radius =
             60000;
         }
 
-        if (
-          d.type ===
+        else if (
+
+          d.type &&
+          d.type.toLowerCase() ===
           "tsunami"
+
         ) {
 
           color =
@@ -125,9 +142,12 @@ async function loadDisasters() {
             90000;
         }
 
-        if (
-          d.type ===
-          "weather"
+        else if (
+
+          d.type &&
+          d.type.toLowerCase() ===
+          "severe weather"
+
         ) {
 
           color =
@@ -138,6 +158,7 @@ async function loadDisasters() {
         }
 
         disasterZones.push({
+
           lat:
             d.coordinates.lat,
 
@@ -145,56 +166,104 @@ async function loadDisasters() {
             d.coordinates.lng,
 
           radius,
+
           type:
             d.type
         });
 
+        /* ZONE */
+
         L.circle(
+
           [
             d.coordinates.lat,
             d.coordinates.lng
           ],
+
           {
             radius,
+
             color,
+
             fillColor:
               color,
+
             fillOpacity:
-              0.12
+              0.12,
+
+            weight:2
           }
+
         ).addTo(map);
 
+        /* MARKER */
+
         L.circleMarker(
+
           [
             d.coordinates.lat,
             d.coordinates.lng
           ],
+
           {
-            radius: 8,
-            color
+
+            radius:8,
+
+            color,
+
+            fillColor:
+              color,
+
+            fillOpacity:
+              0.9,
+
+            weight:2
           }
+
         )
-          .addTo(map)
-          .bindPopup(`
-            <b>${d.type}</b>
-            <br>
-            ${d.title}
-            <br>
-            Magnitude:
-            ${d.magnitude}
-          `);
+
+        .addTo(map)
+
+        .bindPopup(`
+
+          <b>
+            ${d.type}
+          </b>
+
+          <br>
+
+          ${d.title || "Live Disaster"}
+
+          <br>
+
+          Magnitude:
+          ${d.magnitude || "N/A"}
+
+        `)
+
+        .openPopup();
 
       }
     );
 
-  } catch (err) {
+    /* LEAFLET REFRESH */
+
+    setTimeout(() => {
+
+      map.invalidateSize();
+
+    },300);
+
+  }
+
+  catch (err) {
 
     console.error(
+      "Disaster load failed:",
       err
     );
   }
 }
-
 loadDisasters();
 
 /* AI RISK */
