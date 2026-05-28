@@ -1,13 +1,14 @@
 
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>VYUHA — Clarity in Chaos</title>
-  <!-- Leaflet map assets for Zone module -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css"/>
+<!-- Leaflet map assets for Zone module -->
+<link href="https://unpkg.com/leaflet/dist/leaflet.css" rel="stylesheet"/>
+<link href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" rel="stylesheet"/>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap');
 
@@ -616,471 +617,336 @@ html.modal-open, body.modal-open { overflow: hidden; }
   .scroll-cue{bottom:12rem;right:auto;left:50%;transform:translateX(-50%);align-items:center;text-align:center}
 }
 
+
+/* SOS button inside SOS card */
+.sos-card-btn{
+  position:absolute;
+  top:1rem;
+  right:1rem;
+  transform:scale(.75);
+  margin-left:0;
+  z-index:5;
+}
+.sos-card-btn:hover{
+  transform:scale(.75);
+}
 </style>
 <!-- <script src="/vyuha.config.js"></script> -->
 </head>
 <body>
-
 <div id="progress"></div>
-
 <!-- ═══════════════════════════ NAV ═══════════════════════════ -->
 <nav id="nav">
-  <div class="nav-modules">
-    <a href="/sos" class="nav-pill sos-pill" >⚡ SOS</a>
-    <a href="/zone map.html" class="nav-pill">🗺 Zone Marking</a>
-    <a href="/missing-person" class="nav-pill" data-vyuha-module="missingPersons">🔍 Missing Persons</a>
-    <a href="/resources/map.html" class="nav-pill">📦 Resources</a>
-    <a href="/communication" class="nav-pill" data-vyuha-module="p2p">📡 Communication</a>
-  </div>
-<button
-  class="Btn"
-  onclick="window.location.href='/sos'"
->
-
-  <div class="sign">
-
-    <svg
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
-      focusable="false"
-    >
-
-      <circle
-        cx="12"
-        cy="12"
-        r="10"
-        fill="#ffffff"
-      />
-
-      <rect
-        x="11"
-        y="5.5"
-        width="2"
-        height="7"
-        fill="rgb(255,65,65)"
-        rx="1"
-      />
-
-      <circle
-        cx="12"
-        cy="16.8"
-        r="1.4"
-        fill="rgb(255,65,65)"
-      />
-
-    </svg>
-
-  </div>
-
-  <div class="text">
+<div class="nav-modules">
+<a class="nav-pill sos-pill" href="./modules/sos/index.html">⚡ SOS</a>
+<a class="nav-pill" href="./zone map.html">🗺 Zone Marking</a>
+<a class="nav-pill" data-vyuha-module="missingPersons" href="./modules/missing-person/index.html">🔍 Missing Persons</a>
+<a class="nav-pill" href="./resources/map.html">📦 Resources</a>
+<a class="nav-pill" data-vyuha-module="p2p" href="./modules/communication/">📡 Communication</a>
+</div>
+<button class="Btn" onclick="window.location.href='./modules/sos/index.html'">
+<div class="sign">
+<svg aria-hidden="true" focusable="false" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<circle cx="12" cy="12" fill="#ffffff" r="10"></circle>
+<rect fill="rgb(255,65,65)" height="7" rx="1" width="2" x="11" y="5.5"></rect>
+<circle cx="12" cy="16.8" fill="rgb(255,65,65)" r="1.4"></circle>
+</svg>
+</div>
+<div class="text">
     SOS
   </div>
-
 </button>
 </nav>
-
 <!-- ═══════════════════════════ HERO ═══════════════════════════ -->
 <section id="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-grid"></div>
-  <div class="scan-line"></div>
-
-  <!-- orbit rings -->
-  <div class="orbit-container">
-    <div class="ring" style="width:500px;height:500px;border-color:rgba(200,169,110,.05);animation-duration:40s"></div>
-    <div class="ring" style="width:700px;height:700px;border-color:rgba(201,122,122,.04);animation-duration:60s;animation-direction:reverse"></div>
-    <div class="ring" style="width:950px;height:950px;border-color:rgba(122,171,138,.03);animation-duration:90s"></div>
-  </div>
-
-  <div class="hero-content">
-    <div class="hero-status">
-      <div class="status-dot"></div>
+<div class="hero-bg"></div>
+<div class="hero-grid"></div>
+<div class="scan-line"></div>
+<!-- orbit rings -->
+<div class="orbit-container">
+<div class="ring" style="width:500px;height:500px;border-color:rgba(200,169,110,.05);animation-duration:40s"></div>
+<div class="ring" style="width:700px;height:700px;border-color:rgba(201,122,122,.04);animation-duration:60s;animation-direction:reverse"></div>
+<div class="ring" style="width:950px;height:950px;border-color:rgba(122,171,138,.03);animation-duration:90s"></div>
+</div>
+<div class="hero-content">
+<div class="hero-status">
+<div class="status-dot"></div>
       Crisis Response System · Active
     </div>
-
-    
-
-    <h1 class="hero-title">
-      <span class="v-glow">VYUHA</span>
-    </h1>
-
-    <p class="hero-tagline">
-      <span>Clarity</span> in Chaos
+<h1 class="hero-title">
+<span class="v-glow">VYUHA</span>
+</h1>
+<p class="hero-tagline">
+<span>Clarity</span> in Chaos
     </p>
-
-    <p class="hero-desc">
+<p class="hero-desc">
       A unified crisis response platform that cuts through confusion when it matters most.
       Real-time coordination, intelligent alerts, and human connection — deployed the moment disaster strikes.
     </p>
-
-    <div class="hero-actions">
-      <button class="btn-primary pulse" onclick="document.getElementById('modules').scrollIntoView({behavior:'smooth'})">
+<div class="hero-actions">
+<button class="btn-primary pulse" onclick="document.getElementById('modules').scrollIntoView({behavior:'smooth'})">
         Explore Modules
       </button>
-      <a class="sos-cta" href="#" onclick="openSOS(event)" aria-label="SOS">SOS</a>
-    </div>
-  </div>
-
-  <div class="scroll-cue">
-    <span>Discover Modules</span>
-    <div class="scroll-mouse"><div class="scroll-wheel"></div></div>
-  </div>
-
-  <div class="hero-stats">
-    <div class="hstat">
-      <div class="hstat-num" data-target="5">0</div>
-      <div class="hstat-lbl">Integrated Modules</div>
-    </div>
-    <div class="hstat">
-      <div class="hstat-num" data-target="24">0</div>
-      <div class="hstat-lbl">Hour Monitoring</div>
-    </div>
-    <div class="hstat">
-      <div class="hstat-num" data-target="0" data-suffix="ms">0</div>
-      <div class="hstat-lbl">Real-time Response</div>
-    </div>
-  </div>
+<a aria-label="SOS" class="sos-cta" href="./modules/sos/index.html">SOS</a>
+</div>
+</div>
+<div class="scroll-cue">
+<span>Discover Modules</span>
+<div class="scroll-mouse"><div class="scroll-wheel"></div></div>
+</div>
+<div class="hero-stats">
+<div class="hstat">
+<div class="hstat-num" data-target="5">0</div>
+<div class="hstat-lbl">Integrated Modules</div>
+</div>
+<div class="hstat">
+<div class="hstat-num" data-target="24">0</div>
+<div class="hstat-lbl">Hour Monitoring</div>
+</div>
+<div class="hstat">
+<div class="hstat-num" data-suffix="ms" data-target="0">0</div>
+<div class="hstat-lbl">Real-time Response</div>
+</div>
+</div>
 </section>
-
 <!-- ═══════════════════════════ MODULES ═══════════════════════════ -->
 <section id="modules">
-  <div style="max-width:1200px;margin:0 auto">
-    <div class="section-label reveal">Platform Modules</div>
-    <h2 class="section-title reveal">Five systems.<br>One mission.</h2>
-    <p class="section-sub reveal">Every module is purpose-built for crisis scenarios — fast, reliable, and designed to work even when infrastructure fails.</p>
-
-    <div class="modules-grid">
-
-      <!-- SOS -->
-     <button
-  class="Btn"
-  onclick="window.location.href='/sos'"
->
-
-  <div class="sign">
-
-    <svg
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
-      focusable="false"
-    >
-
-      <circle
-        cx="12"
-        cy="12"
-        r="10"
-        fill="#ffffff"
-      />
-
-      <rect
-        x="11"
-        y="5.5"
-        width="2"
-        height="7"
-        fill="rgb(255,65,65)"
-        rx="1"
-      />
-
-      <circle
-        cx="12"
-        cy="16.8"
-        r="1.4"
-        fill="rgb(255,65,65)"
-      />
-
-    </svg>
-
-  </div>
-
-  <div class="text">
-    SOS
-  </div>
-
-</button>
-
-      <!-- ZONE MARKING -->
-      <div class="m-card wide" data-mod="zone" style="transition-delay:.15s" onclick="location.href='zone map.html'">
-        <div class="card-badge badge-live">● Live</div>
-        <div class="card-icon">🗺️</div>
-        <div class="card-tag">Module 02 · Mapping</div>
-        <h3 class="card-title">Safe & Danger Zone Marking</h3>
-        <p class="card-desc">Crowdsourced, real-time map overlay identifying safe corridors, active threat zones, and no-go areas — updated continuously by verified field reports and aerial data feeds.</p>
-        <div class="card-features">
-          <span class="feat-pill">Real-time Map</span>
-          <span class="feat-pill">Crowd-verified</span>
-          <span class="feat-pill">Color-coded Zones</span>
-          <span class="feat-pill">Offline Tiles</span>
-          <span class="feat-pill">Route Planner</span>
-          <span class="feat-pill">Satellite Layer</span>
-        </div>
-        <a class="card-btn" href="zone map.html">Open Module <span class="arrow">→</span></a>
-        <div class="card-watermark">🗺</div>
-      </div>
-
-      <!-- MISSING PERSON -->
-<div
-  class="m-card wide"
-  data-mod="missing"
-  style="transition-delay:.25s"
-  onclick="window.location.href='/missing-person'"
->
-  <div class="card-badge badge-live">
-    ● Live
-  </div>
-
-  <div class="card-icon">
-    🔍
-  </div>
-
-  <div class="card-tag">
-    Module 03 · Search
-  </div>
-
-  <h3 class="card-title">
-    Missing Person Locator
-  </h3>
-
-  <p class="card-desc">
-    Submit or search missing person reports with photo matching,
-    last-known-location tracking, and shelter cross-referencing —
-    reuniting families faster.
-  </p>
-
-  <div class="card-features">
-    <span class="feat-pill">Photo Upload</span>
-    <span class="feat-pill">AI Matching</span>
-    <span class="feat-pill">Last GPS Point</span>
-    <span class="feat-pill">Shelter Link</span>
-    <span class="feat-pill">Family Portal</span>
-  </div>
-
-  <a
-    class="card-btn"
-    href="/missing-person"
-    onclick="event.stopPropagation()"
-  >
-    Open Module
-    <span class="arrow">→</span>
-  </a>
-
-  <div class="card-watermark">
-    🔍
-  </div>
-</div>
-
-      <!-- RESOURCES -->
-      <div class="m-card" data-mod="resources" style="transition-delay:.35s" onclick="location.href='resources/map.html'">
-        <div class="card-badge badge-live">● Live</div>
-        <div class="card-icon">📦</div>
-        <div class="card-tag">Module 04 · Relief</div>
-        <h3 class="card-title">Resources & Relief Shelters</h3>
-        <p class="card-desc">Locate active relief shelters, available food, medical supplies, and aid stations near you — with live capacity updates.</p>
-        <div class="card-features">
-          <span class="feat-pill">Shelter Finder</span>
-          <span class="feat-pill">Supply Tracking</span>
-          <span class="feat-pill">Capacity Live</span>
-          <a class="feat-pill" href="/sos" onclick="event.stopPropagation()">SOS</a>
-        </div>
-        <a class="card-btn" href="resources/map.html">Open Module <span class="arrow">→</span></a>
-        <div class="card-watermark">📦</div>
-      </div>
-
-      <!-- COMMUNICATIONS -->
-      <div class="m-card" data-mod="comms" data-vyuha-module="p2p" style="transition-delay:.45s">
-        <div class="card-badge badge-beta">◆ Beta</div>
-        <div class="card-icon">📡</div>
-        <div class="card-tag">Module 05 · Connect</div>
-        <h3 class="card-title">Real-time Communication</h3>
-        <div class="signal-bars">
-          <div class="sig-bar active" style="height:8px;animation-delay:0s"></div>
-          <div class="sig-bar active" style="height:13px;animation-delay:.2s"></div>
-          <div class="sig-bar active" style="height:18px;animation-delay:.4s"></div>
-          <div class="sig-bar" style="height:22px"></div>
-          <div class="sig-bar" style="height:18px"></div>
-        </div>
-        <p class="card-desc">Encrypted, low-bandwidth messaging between civilians, responders, and command centers — functional even on 2G networks.</p>
-        <div class="card-features">
-          <span class="feat-pill">End-to-end Encrypted</span>
-          <span class="feat-pill">2G Compatible</span>
-          <span class="feat-pill">Broadcast Alerts</span>
-          <span class="feat-pill">Mesh Network</span>
-        </div>
-        <a class="card-btn" href="#" data-vyuha-module="p2p">Open Module <span class="arrow">→</span></a>
-        <div class="card-watermark">📡</div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- SOS ALERT -->
-
-<div
-  class="m-card"
-  data-mod="sos"
-  style="transition-delay:.05s"
-  onclick="window.location.href='/sos'"
->
-
-  <div class="sos-ring"></div>
-
-  <div class="card-badge badge-critical">
+<div style="max-width:1200px;margin:0 auto">
+<div class="section-label reveal">Platform Modules</div>
+<h2 class="section-title reveal">Five systems.<br/>One mission.</h2>
+<p class="section-sub reveal">Every module is purpose-built for crisis scenarios — fast, reliable, and designed to work even when infrastructure fails.</p>
+<div class="modules-grid"><div class="m-card" data-mod="sos" onclick="window.location.href='./modules/sos/index.html'" style="transition-delay:.05s">
+<div class="sos-ring"></div>
+<div class="card-badge badge-critical">
     ● Critical
   </div>
 
-  <div class="card-icon">
+
+<div class="card-icon">
     🚨
   </div>
-
-  <div class="card-tag">
+<div class="card-tag">
     Module 01 · Emergency
   </div>
-
-  <h3 class="card-title">
+<h3 class="card-title">
     SOS Alert
   </h3>
-
-  <p class="card-desc">
+<p class="card-desc">
     Send an instant distress signal
     with your live location, status,
     and emergency type — reaching
     responders and connected contacts
     in seconds.
   </p>
-
-  <div class="card-features">
-
-    <span class="feat-pill">
+<div class="card-features">
+<span class="feat-pill">
       Live Location
     </span>
-
-    <span class="feat-pill">
+<span class="feat-pill">
       One-tap Alert
     </span>
-
-    <span class="feat-pill">
+<span class="feat-pill">
       Offline Mode
     </span>
-
-    <span class="feat-pill">
+<span class="feat-pill">
       SMS Fallback
     </span>
-
-  </div>
-
-  <a
-    class="card-btn"
-    href="/sos"
-    onclick="event.stopPropagation()"
-  >
+</div>
+<a class="card-btn" href="./modules/sos/index.html" onclick="event.stopPropagation()">
     Open Module
 
     <span class="arrow">
       →
     </span>
-  </a>
-
-  <div class="card-watermark">
+</a>
+<div class="card-watermark">
     🚨
   </div>
-
 </div>
-  const C = window.VYUHA_CONFIG || {};
-  const server = String(C.sosUrl || "http://localhost:5000/").replace(/\/+$/, "");
-  const fallback = "vyuha-sos/public/index.html";
-  const timeoutMs = 1200;
+<!-- SOS -->
 
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+<!-- ZONE MARKING -->
+<div class="m-card wide" data-mod="zone" onclick="location.href='zone map.html'" style="transition-delay:.15s">
+<div class="card-badge badge-live">● Live</div>
+<div class="card-icon">🗺️</div>
+<div class="card-tag">Module 02 · Mapping</div>
+<h3 class="card-title">Safe &amp; Danger Zone Marking</h3>
+<p class="card-desc">Crowdsourced, real-time map overlay identifying safe corridors, active threat zones, and no-go areas — updated continuously by verified field reports and aerial data feeds.</p>
+<div class="card-features">
+<span class="feat-pill">Real-time Map</span>
+<span class="feat-pill">Crowd-verified</span>
+<span class="feat-pill">Color-coded Zones</span>
+<span class="feat-pill">Offline Tiles</span>
+<span class="feat-pill">Route Planner</span>
+<span class="feat-pill">Satellite Layer</span>
+</div>
+<a class="card-btn" href="zone map.html">Open Module <span class="arrow">→</span></a>
+<div class="card-watermark">🗺</div>
+</div>
+<!-- MISSING PERSON -->
+<div class="m-card wide" data-mod="missing" onclick="window.location.href='./modules/missing-person/index.html'" style="transition-delay:.25s">
+<div class="card-badge badge-live">
+    ● Live
+  </div>
+<div class="card-icon">
+    🔍
+  </div>
+<div class="card-tag">
+    Module 03 · Search
+  </div>
+<h3 class="card-title">
+    Missing Person Locator
+  </h3>
+<p class="card-desc">
+    Submit or search missing person reports with photo matching,
+    last-known-location tracking, and shelter cross-referencing —
+    reuniting families faster.
+  </p>
+<div class="card-features">
+<span class="feat-pill">Photo Upload</span>
+<span class="feat-pill">AI Matching</span>
+<span class="feat-pill">Last GPS Point</span>
+<span class="feat-pill">Shelter Link</span>
+<span class="feat-pill">Family Portal</span>
+</div>
+<a class="card-btn" href="./modules/missing-person/index.html" onclick="event.stopPropagation()">
+    Open Module
+    <span class="arrow">→</span>
+</a>
+<div class="card-watermark">
+    🔍
+  </div>
+</div>
+<!-- RESOURCES -->
+<div class="m-card" data-mod="resources" onclick="location.href='./resources/map.html'" style="transition-delay:.35s">
+<div class="card-badge badge-live">● Live</div>
+<div class="card-icon">📦</div>
+<div class="card-tag">Module 04 · Relief</div>
+<h3 class="card-title">Resources &amp; Relief Shelters</h3>
+<p class="card-desc">Locate active relief shelters, available food, medical supplies, and aid stations near you — with live capacity updates.</p>
+<div class="card-features">
+<span class="feat-pill">Shelter Finder</span>
+<span class="feat-pill">Supply Tracking</span>
+<span class="feat-pill">Capacity Live</span>
+<a class="feat-pill" href="./modules/sos/index.html" onclick="event.stopPropagation()">SOS</a>
+</div>
+<a class="card-btn" href="resources/map.html">Open Module <span class="arrow">→</span></a>
+<div class="card-watermark">📦</div>
+</div>
+<!-- COMMUNICATIONS -->
+<div class="m-card" data-mod="comms" data-vyuha-module="p2p" onclick="window.location.href='./modules/communication/'" style="transition-delay:.45s">
+<div class="card-badge badge-beta">◆ Beta</div>
+<div class="card-icon">📡</div>
+<div class="card-tag">Module 05 · Connect</div>
+<h3 class="card-title">Real-time Communication</h3>
+<div class="signal-bars">
+<div class="sig-bar active" style="height:8px;animation-delay:0s"></div>
+<div class="sig-bar active" style="height:13px;animation-delay:.2s"></div>
+<div class="sig-bar active" style="height:18px;animation-delay:.4s"></div>
+<div class="sig-bar" style="height:22px"></div>
+<div class="sig-bar" style="height:18px"></div>
+</div>
+<p class="card-desc">Encrypted, low-bandwidth messaging between civilians, responders, and command centers — functional even on 2G networks.</p>
+<div class="card-features">
+<span class="feat-pill">End-to-end Encrypted</span>
+<span class="feat-pill">2G Compatible</span>
+<span class="feat-pill">Broadcast Alerts</span>
+<span class="feat-pill">Mesh Network</span>
+</div>
+<a class="card-btn" data-vyuha-module="p2p" href="./modules/communication/" onclick="event.stopPropagation()">Open Module <span class="arrow">→</span></a>
+<div class="card-watermark">📡</div>
+</div>
+</div>
+</div>
+</section>
+<!-- SOS ALERT -->
+<script>
+// Safe SOS launcher
+function openSOS(event){
+  if(event) event.preventDefault();
 
-  fetch(server + "/", { signal: controller.signal, mode: "cors" })
+  const server = "http://localhost:5000";
+  const fallback = "./modules/sos/index.html";
+
+  fetch(server + "/", { mode: "no-cors" })
     .then(() => {
-      clearTimeout(timeout);
-      window.location.href = server + "/";
+      window.location.href = server;
     })
     .catch(() => {
-      clearTimeout(timeout);
       window.location.href = fallback;
     });
+}
 
-document.querySelectorAll('.reveal, .m-card, .how-step').forEach(el => io.observe(el));
-
-
+</script>
 <!-- ═══════════════════════════ HOW IT WORKS ═══════════════════════════ -->
 <section id="how">
-  <div class="how-inner">
-    <div class="section-label reveal">Designed for Speed</div>
-    <h2 class="section-title reveal">From crisis to clarity<br>in four steps</h2>
-    <div class="how-steps">
-      <div class="how-step" style="transition-delay:.05s">
-        <div class="step-num">01</div>
-        <div class="step-icon">📍</div>
-        <div class="step-title">Open VYUHA</div>
-        <div class="step-desc">Access the platform instantly — no login required for emergency modules. Works offline with cached data.</div>
-      </div>
-      <div class="how-step" style="transition-delay:.15s">
-        <div class="step-num">02</div>
-        <div class="step-icon">🎯</div>
-        <div class="step-title">Select Module</div>
-        <div class="step-desc">Pick the tool you need — SOS, zone map, search, aid, or communications. Purpose-built UI for high-stress situations.</div>
-      </div>
-      <div class="how-step" style="transition-delay:.25s">
-        <div class="step-num">03</div>
-        <div class="step-icon">⚡</div>
-        <div class="step-title">Act Instantly</div>
-        <div class="step-desc">Single-tap actions. No confusing menus. Every interaction is designed for 3-second completion under pressure.</div>
-      </div>
-      <div class="how-step" style="transition-delay:.35s">
-        <div class="step-num">04</div>
-        <div class="step-icon">🔗</div>
-        <div class="step-title">Stay Connected</div>
-        <div class="step-desc">Sync across responders, family, and command — every update is shared in real time across the network.</div>
-      </div>
-    </div>
-  </div>
+<div class="how-inner">
+<div class="section-label reveal">Designed for Speed</div>
+<h2 class="section-title reveal">From crisis to clarity<br/>in four steps</h2>
+<div class="how-steps">
+<div class="how-step" style="transition-delay:.05s">
+<div class="step-num">01</div>
+<div class="step-icon">📍</div>
+<div class="step-title">Open VYUHA</div>
+<div class="step-desc">Access the platform instantly — no login required for emergency modules. Works offline with cached data.</div>
+</div>
+<div class="how-step" style="transition-delay:.15s">
+<div class="step-num">02</div>
+<div class="step-icon">🎯</div>
+<div class="step-title">Select Module</div>
+<div class="step-desc">Pick the tool you need — SOS, zone map, search, aid, or communications. Purpose-built UI for high-stress situations.</div>
+</div>
+<div class="how-step" style="transition-delay:.25s">
+<div class="step-num">03</div>
+<div class="step-icon">⚡</div>
+<div class="step-title">Act Instantly</div>
+<div class="step-desc">Single-tap actions. No confusing menus. Every interaction is designed for 3-second completion under pressure.</div>
+</div>
+<div class="how-step" style="transition-delay:.35s">
+<div class="step-num">04</div>
+<div class="step-icon">🔗</div>
+<div class="step-title">Stay Connected</div>
+<div class="step-desc">Sync across responders, family, and command — every update is shared in real time across the network.</div>
+</div>
+</div>
+</div>
 </section>
-
 <!-- ═══════════════════════════ ALERT BANNER ═══════════════════════════ -->
 <div id="alert-section">
-  <div class="alert-inner">
-    <div class="alert-icon">🚨</div>
-    <div class="alert-text">
-      <h3>Need help right now?</h3>
-      <p>Activate an emergency SOS signal instantly — your location, status, and emergency type will be broadcast to all active responders in your region.</p>
-    </div>
-    <div class="alert-action">
-      <a class="sos-cta" href="#" onclick="openSOS(event)" aria-label="SOS">SOS</a>
-    </div>
-  </div>
+<div class="alert-inner">
+<div class="alert-icon">🚨</div>
+<div class="alert-text">
+<h3>Need help right now?</h3>
+<p>Activate an emergency SOS signal instantly — your location, status, and emergency type will be broadcast to all active responders in your region.</p>
 </div>
-
+<div class="alert-action">
+<a aria-label="SOS" class="sos-cta" href="./modules/sos/index.html">SOS</a>
+</div>
+</div>
+</div>
 <!-- ═══════════════════════════ FOOTER ═══════════════════════════ -->
 <footer>
-  <div class="footer-inner">
-    <div class="footer-brand">
-      <div>
-        <div class="footer-brand-name">VYUHA</div>
-        <div class="footer-tagline">Clarity in Chaos</div>
-      </div>
-    </div>
-    <div class="footer-links">
-      <a href="#">About</a>
-      <a href="#">Modules</a>
-      <a href="#">Partners</a>
-      <a href="#">API</a>
-      <a href="#">Contact</a>
-    </div>
-    <div class="footer-copy">© 2025 VYUHA · All rights reserved</div>
-  </div>
+<div class="footer-inner">
+<div class="footer-brand">
+<div>
+<div class="footer-brand-name">VYUHA</div>
+<div class="footer-tagline">Clarity in Chaos</div>
+</div>
+</div>
+<div class="footer-links">
+<a href="#hero">About</a>
+<a href="#modules">Modules</a>
+<a href="#how">Partners</a>
+<a href="#how">API</a>
+<a href="#alert-section">Contact</a>
+</div>
+<div class="footer-copy">© 2025 VYUHA · All rights reserved</div>
+</div>
 </footer>
-
 <!-- ═══════════════════════════ MODALS ═══════════════════════════ -->
 <div class="modal-overlay" id="modal" onclick="closeOnBg(event)">
-  <div class="modal-box" id="modal-box"></div>
+<div class="modal-box" id="modal-box"></div>
 </div>
-
 <!-- ═══════════════════════════ SCRIPTS ═══════════════════════════ -->
 <script>
 // ── PROGRESS BAR
@@ -1092,7 +958,9 @@ window.addEventListener('scroll', () => {
 
 // ── NAV SCROLL
 const nav = document.getElementById('nav');
-window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 60));
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 60);
+});
 
 // ── CARD MOUSE GLOW
 document.querySelectorAll('.m-card').forEach(card => {
@@ -1110,23 +978,27 @@ const io = new IntersectionObserver(entries => {
   entries.forEach(en => {
     if (en.isIntersecting) {
       en.target.classList.add('vis');
-      if (en.target.classList.contains('m-card')) {
-        // stagger already via CSS
-      }
     }
   });
 }, { threshold: 0.12 });
 
+document.querySelectorAll('.reveal, .m-card, .how-step').forEach(el => {
+  io.observe(el);
+});
 
 // ── COUNTER
 function animCount(el, target, suffix = '') {
-  let n = 0; const dur = 1800; const step = target / (dur / 16);
+  let n = 0;
+  const dur = 1800;
+  const step = target / (dur / 16);
+
   const t = setInterval(() => {
     n = Math.min(n + step, target);
     el.textContent = Math.floor(n).toLocaleString() + suffix;
     if (n >= target) clearInterval(t);
   }, 16);
 }
+
 const counterIO = new IntersectionObserver(entries => {
   if (entries[0].isIntersecting) {
     document.querySelectorAll('[data-target]').forEach(el => {
@@ -1135,129 +1007,24 @@ const counterIO = new IntersectionObserver(entries => {
     counterIO.disconnect();
   }
 }, { threshold: 0.3 });
+
 counterIO.observe(document.getElementById('hero'));
 
-// ── MODAL DATA
-const MODULES = {
-  sos: {
-    tag: 'Module 01 · Emergency',
-    icon: '🚨',
-    title: 'SOS Alert System',
-    color: 'var(--rose)',
-    desc: 'Instantly broadcast your distress signal with precise GPS coordinates, emergency type, and personal status to all active responders in your vicinity — even on low bandwidth.',
-    features: [
-      'One-tap SOS broadcast with live GPS location',
-      'Offline mode — stores alert and sends when connection restores',
-      'SMS fallback for zero-internet environments',
-      'Multi-type emergency selection: medical, conflict, trapped, fire',
-      'Automatic alert escalation if no response in 90 seconds',
-      'Connected family & responder notification chain'
-    ]
-  },
-  zone: {
-    tag: 'Module 02 · Mapping',
-    icon: '🗺️',
-    title: 'Safe & Danger Zone Marking',
-    color: 'var(--amber)',
-    desc: 'A crowd-verified, continuously updated map that shows you exactly where is safe, where is dangerous, and the best route between them — powered by field reports and verified data feeds.',
-    features: [
-      'Live color-coded zone overlays (green/amber/red)',
-      'Crowd-submitted zone reports with verification scoring',
-      'Safe route planning between two points',
-      'Satellite and street map layers',
-      'Downloadable offline tile maps for your region',
-      'Responder-confirmed zone updates with priority weighting'
-    ]
-  },
-  missing: {
-    tag: 'Module 03 · Search',
-    icon: '🔍',
-    title: 'Missing Person Locator',
-    color: 'var(--sky)',
-    desc: 'Submit a missing person report or search the database using name, photo, or last known location. AI-assisted photo matching cross-references shelter registries to reunite families faster.',
-    features: [
-      'Photo upload with AI face-matching across registries',
-      'Last known GPS location mapping',
-      'Cross-reference with all registered relief shelters',
-      'Family portal for secure status updates',
-      'Responder-confirmed sighting reports',
-      'Multi-language search and report forms'
-    ]
-  },
-  resources: {
-    tag: 'Module 04 · Relief',
-    icon: '📦',
-    title: 'Resources & Relief Shelters',
-    color: 'var(--sage)',
-    desc: 'Find active relief shelters, food stations, medical aid points, and supply distribution centres near you — with real-time capacity and availability data so you can plan your route with confidence.',
-    features: [
-      'Live shelter capacity and occupancy status',
-      'Medical aid, food, water, and supplies availability',
-      'Distance-based filtering and map view',
-      'Request specific resources with delivery coordination',
-      'Volunteer and NGO registration portal',
-      'Historical supply level trends for planning'
-    ]
-  },
-  comms: {
-    tag: 'Module 05 · Connect',
-    icon: '📡',
-    title: 'Real-time Communication',
-    color: 'var(--violet)',
-    desc: 'Encrypted messaging built for crisis environments — functional on 2G networks, SMS fallback, and peer-to-peer mesh networking. Stay connected with family, responders, and command when it matters.',
-    features: [
-      'End-to-end encrypted channels for civilian and responder use',
-      'Designed for 2G/low-bandwidth environments',
-      'SMS gateway fallback for zero-data scenarios',
-      'Broadcast alerts from responders to civilians in a zone',
-      'Peer-to-peer mesh networking (no central server needed)',
-      'Voice note support for low-literacy users'
-    ]
-  }
-};
-
-function openModal(key) {
-  const m = MODULES[key];
-  const box = document.getElementById('modal-box');
-  box.style.setProperty('--card-accent', m.color);
-
-  box.innerHTML = `
-      <div class="modal-header">
-        <div>
-          <div class="modal-tag">${m.icon} ${m.tag}</div>
-          <div class="modal-title">${m.title}</div>
-        </div>
-        <button class="modal-close" onclick="closeModal()">✕</button>
-      </div>
-      <p class="modal-desc">${m.desc}</p>
-      <ul class="modal-features">
-        ${m.features.map(f => `<li>${f}</li>`).join('')}
-      </ul>
-      <div class="modal-footer-btns">
-        <button class="modal-launch" style="background:${m.color}">Launch ${m.title.split(' ')[0]} Module →</button>
-        <button class="modal-later" onclick="closeModal()">Back to Overview</button>
-      </div>
-    `;
-  document.getElementById('modal').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-
+// ── MODAL
 function closeModal() {
   document.getElementById('modal').classList.remove('open');
   document.body.style.overflow = '';
 }
-
 function closeOnBg(e) {
   if (e.target === document.getElementById('modal')) closeModal();
 }
-
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
 </script>
-
 <!-- Leaflet scripts for embedded Zone map -->
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
-
 <script>
 /* Zone map initialization for modal */
 window.zoneMapInitialized = false;
@@ -1305,4 +1072,4 @@ function initZoneMap(){
 }
 </script>
 </body>
-</html>
+</html>&gt;

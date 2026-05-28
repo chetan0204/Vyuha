@@ -206,43 +206,61 @@ async function fetchDisasters() {
         }
       );
 
-   /* LIVE WEATHER */
+    /* WEATHER */
 
-const weatherResponse =
-  await axios.get(
-    `https://api.openweathermap.org/data/2.5/weather?q=Visakhapatnam&appid=9196d3efbc112fad4a24095bf3a27ea1`
-  );
+    const weather =
+      await axios.get(
+        `https://api.openweathermap.org/data/2.5/weather?q=Visakhapatnam,in&appid=${9196d3efbc112fad4a24095bf3a27ea1}`
+      );
 
-const weatherData =
-  weatherResponse.data;
+    const weatherData =
+      weather.data;
 
-const weather = [
+    let weatherDisasters =
+      [];
 
-  {
+    if (
 
-    type:
-      "severe weather",
+      weatherData.wind.speed >
+        15 ||
 
-    title:
       weatherData.weather[0]
-        .description,
+        .main ===
+        "Thunderstorm" ||
 
-    magnitude:
-      weatherData.wind.speed,
+      weatherData.rain
+    ) {
 
-    radius:
-      90000,
+      weatherDisasters.push({
 
-    coordinates: {
+        type:
+          "SEVERE WEATHER",
 
-      lat:
-        weatherData.coord.lat,
+        coastal:
+          weatherData.name ===
+          "Visakhapatnam"
+            ? true
+            : false,
 
-      lng:
-        weatherData.coord.lon
+        lat:
+          weatherData.coord.lat,
+
+        lng:
+          weatherData.coord.lon,
+
+        magnitude:
+          weatherData.wind.speed,
+
+        place:
+          weatherData.name,
+
+        radius:
+          weatherData.wind.speed >
+          15
+            ? 80000
+            : 40000
+      });
     }
-  }
-];
 
     /* COMBINE */
 

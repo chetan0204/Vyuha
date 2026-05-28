@@ -2,137 +2,255 @@
 <html lang="en">
 <head>
 
-  <meta charset="UTF-8" />
+<meta charset="UTF-8" />
 
-  <title>Vyuha SOS</title>
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+/>
 
-  <!-- STYLE -->
-  <link rel="stylesheet" href="style.css" />
+<title>Vyuha SOS</title>
 
-  <style>
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 18px 28px;
-    }
-    @media (max-width:900px){
-      .topbar{padding:12px 16px}
-    }
-    @media (max-width:600px){
-      .topbar{padding:10px 12px}
-    }
-  </style>
+<!-- MAIN CSS -->
 
-  <!-- LEAFLET -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet/dist/leaflet.css"
-  />
+<link
+  rel="stylesheet"
+  href="style.css"
+/>
 
-  <!-- SOCKET -->
-  <script src="/socket.io/socket.io.js"></script>
+<!-- LEAFLET -->
+
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
+<style>
+
+.topbar{
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:flex-end;
+
+  padding:18px 28px;
+
+  z-index:1000;
+}
+
+.status{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:10px;
+}
+
+#connectionDot{
+
+  width:12px;
+
+  height:12px;
+
+  border-radius:50%;
+
+  background:#00ff99;
+}
+
+/* MAP FIX */
+
+.map-section{
+
+  position:relative;
+
+  width:100%;
+
+  margin-top:30px;
+
+  border-radius:24px;
+
+  overflow:hidden;
+}
+
+#map{
+
+  width:100%;
+
+  height:500px;
+
+  min-height:500px;
+
+  border-radius:24px;
+
+  z-index:1;
+}
+
+.map-legend{
+
+  position:absolute;
+
+  bottom:20px;
+
+  right:20px;
+
+  z-index:1000;
+
+  background:rgba(
+    0,0,0,.65
+  );
+
+  backdrop-filter:blur(12px);
+
+  padding:14px 18px;
+
+  border-radius:16px;
+}
+
+.legend-item{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:10px;
+
+  margin-bottom:8px;
+}
+
+.legend-color{
+
+  width:14px;
+
+  height:14px;
+
+  border-radius:50%;
+}
+
+.earthquake{
+
+  background:#ffb347;
+}
+
+.tsunami{
+
+  background:#3ba4ff;
+}
+
+.sos{
+
+  background:#ff3b3b;
+}
+
+</style>
 
 </head>
 
 <body>
 
+<!-- TOPBAR -->
 
-  <!-- TOPBAR -->
+<header class="topbar">
 
-  <header class="topbar">
+  <div class="status">
 
-    <div class="status">
+    <span id="connectionDot"></span>
 
-      <span id="connectionDot"></span>
-
-      <p id="connectionText">
-        Connected
-      </p>
-
-    </div>
-
-  </header>
-
-  <!-- MAIN -->
-
-  <main class="main">
-
-    <h1>Emergency SOS</h1>
-
-    <p class="subtitle">
-      Broadcast your emergency location instantly
+    <p id="connectionText">
+      Connected
     </p>
-
-    <!-- SOS BUTTON -->
-
-    <div class="sos-container">
-
-      <div class="ring"></div>
-      <div class="ring"></div>
-      <div class="ring"></div>
-
-      <button
-        class="sos-button"
-        onclick="triggerSOS()"
-      >
-        SOS
-      </button>
-
-    </div>
-
-    <!-- AI RISK -->
-
-    <div class="risk-card">
-
-      <h3>AI RISK ASSESSMENT</h3>
-
-      <div
-        id="riskLevel"
-        class="risk low"
-      >
-        LOW
-      </div>
-
-    </div>
-
-    <!-- BROADCAST -->
-
-    <div class="broadcast-panel">
-
-      <p id="broadcastText">
-        Awaiting emergency transmission...
-      </p>
-
-    </div>
-
-    <!-- LIVE FEED -->
-
-<div class="live-feed">
-
-  <h3>
-    LIVE CRISIS FEED
-  </h3>
-
-  <div id="feedContainer">
-
-    Awaiting live events...
 
   </div>
 
-</div>
+</header>
 
-    <!-- MAP -->
+<!-- MAIN -->
 
-<!-- MAP -->
+<main class="main">
 
-<div class="map-section">
+  <h1>
+    Emergency SOS
+  </h1>
 
-  <div id="map"></div>
+  <p class="subtitle">
+    Broadcast your emergency
+    location instantly
+  </p>
+
+  <!-- SOS -->
+
+  <div class="sos-container">
+
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+
+    <button
+      class="sos-button"
+      onclick="triggerSOS()"
+    >
+      SOS
+    </button>
+
+  </div>
+
+  <!-- AI RISK -->
+
+  <div class="risk-card">
+
+    <h3>
+      AI RISK ASSESSMENT
+    </h3>
+
+    <div
+      id="riskLevel"
+      class="risk low"
+    >
+      LOW
+    </div>
+
+  </div>
+
+  <!-- BROADCAST -->
+
+  <div class="broadcast-panel">
+
+    <p id="broadcastText">
+
+      Awaiting emergency
+      transmission...
+
+    </p>
+
+  </div>
+
+  <!-- FEED -->
+
+  <div class="live-feed">
+
+    <h3>
+      LIVE CRISIS FEED
+    </h3>
+
+    <div id="feedContainer">
+
+      Awaiting live events...
+
+    </div>
+
+  </div>
+
+  <!-- MAP -->
+
+  <div class="map-section">
+
+    <div id="map"></div>
 
   <!-- MAP LEGEND -->
 
- <div class="map-legend">
+<div class="map-legend">
 
   <div class="legend-item">
 
@@ -157,21 +275,36 @@
   <div class="legend-item">
 
     <div
-      class="legend-color sos"
+      class="legend-color user-location"
     ></div>
 
-    Active SOS Signal
+    Severe Weather Alert
 
   </div>
 
-</div>
-  </main>
+   <div class="legend-item">
 
-  <!-- LEAFLET -->
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <div
+      class="legend-color sos"
+    ></div>
 
-  <!-- SCRIPT -->
-  <script src="script.js"></script>
+    SOS Signal
+
+  </div>
+
+</div>  </main>
+
+<!-- SOCKET -->
+
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
+<!-- LEAFLET -->
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<!-- MAIN -->
+
+<script src="script.js"></script>
 
 </body>
 </html>
