@@ -46,36 +46,60 @@
     </div>
 
     <script>
-    (function () {
-      try {
-        var q = new URLSearchParams(location.search).get("socketUrl");
-        window.__VYUHA_P2P__ = q ? decodeURIComponent(q).replace(/\/+$/, "") : "";
-      } catch (e) {
-        window.__VYUHA_P2P__ = "";
+(function () {
+
+  var base =
+    "https://vyuha-backend.onrender.com";
+
+  var s =
+    document.createElement(
+      "script"
+    );
+
+  s.src =
+    base +
+    "/socket.io/socket.io.js";
+
+  s.onload =
+    function () {
+
+      window.__VYUHA_P2P__ =
+        base;
+
+      var a =
+        document.createElement(
+          "script"
+        );
+
+      a.src =
+        "app.js";
+
+      document.body.appendChild(
+        a
+      );
+    };
+
+  s.onerror =
+    function () {
+
+      var el =
+        document.getElementById(
+          "status"
+        );
+
+      if (el) {
+
+        el.textContent =
+          "Communication server unavailable";
       }
-    })();
-    </script>
-    <script>
-    (function () {
-      var api = window.__VYUHA_P2P__ || "";
-      var base = api || (window.location.origin || "");
-      var s = document.createElement("script");
-      s.src = base + "/socket.io/socket.io.js";
-      s.onload = function () {
-        var a = document.createElement("script");
-        a.src = "app.js";
-        document.body.appendChild(a);
-      };
-      s.onerror = function () {
-        var el = document.getElementById("status");
-        if (el) {
-          el.textContent =
-            "Cannot reach Communication server. From the project folder run: npm run dev (then open http://localhost:5500/) or: cd vyuha-p2p && node server.js";
-        }
-      };
-      document.head.appendChild(s);
-    })();
-    </script>
+    };
+
+  document.head.appendChild(
+    s
+  );
+
+})();
+</script>
 
 </body>
 
