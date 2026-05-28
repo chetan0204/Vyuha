@@ -142,20 +142,20 @@ async function loadDisasters() {
             90000;
         }
 
-        else if (
+else if (
 
-          d.type &&
-          d.type.toLowerCase() ===
-          "severe weather"
+  d.type &&
+  d.type.toLowerCase() ===
+  "severe weather"
 
-        ) {
+) {
 
-          color =
-            "#ffd700";
+  color =
+    "#b84dff";
 
-          radius =
-            70000;
-        }
+  radius =
+    70000;
+}
 
         disasterZones.push({
 
