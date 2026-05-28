@@ -1,10 +1,21 @@
 const express = require("express");
 const path = require("path");
 const http = require("http");
+const cors =
+require("cors");
 const axios = require("axios");
 const { Server } = require("socket.io");
 
 const app = express();
+app.use(
+  cors({
+    origin:"*",
+    methods:[
+      "GET",
+      "POST"
+    ]
+  })
+);
 
 const server =
   http.createServer(app);
