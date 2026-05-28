@@ -1,7 +1,6 @@
-const socket =
-  typeof window !== "undefined" && window.__VYUHA_P2P__
-    ? io(window.__VYUHA_P2P__)
-    : io();
+const socket = io(
+  "https://vyuha-backend.onrender.com"
+);
 
 const joinBtn = document.getElementById("joinBtn");
 

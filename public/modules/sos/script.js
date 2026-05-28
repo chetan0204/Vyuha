@@ -67,6 +67,11 @@ if (
         "© OpenStreetMap"
     }
   ).addTo(map);
+  setTimeout(() => {
+
+  map.invalidateSize();
+
+}, 300);
 }
 
 /* DISASTER API */
@@ -347,6 +352,7 @@ function addSOSMarker(
     <br>
     ${data.assessment}
   `);
+  marker.openPopup();
 
   sosMarkers[data.id] =
     marker;
