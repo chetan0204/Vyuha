@@ -431,6 +431,14 @@ function addSOSMarker(
 
 function triggerSOS() {
 
+  if (!navigator.geolocation) {
+
+    alert(
+      "Geolocation not supported by your browser"
+    );
+    return;
+  }
+
   navigator.geolocation.getCurrentPosition(
 
     (pos) => {
@@ -440,6 +448,9 @@ function triggerSOS() {
 
       const lng =
         pos.coords.longitude;
+
+      const accuracy =
+        pos.coords.accuracy;
 
       const risk =
         calculateRisk(
@@ -454,6 +465,8 @@ function triggerSOS() {
 
         lat,
         lng,
+
+        accuracy,
 
         disasterType:
           "Emergency",
@@ -481,39 +494,80 @@ function triggerSOS() {
         13
       );
 
-      const b =
-        document.getElementById(
-          "broadcastText"
-        );
+const broadcast =
+  document.getElementById(
+    "broadcastText"
+  );
 
-      if (b) {
+if (broadcast) {
 
-        b.innerHTML = `
-          🚨 SOS ACTIVE
-          <br><br>
-          ${lat.toFixed(
-            4
-          )},
-          ${lng.toFixed(
-            4
-          )}
-          <br><br>
-          ${risk}
-        `;
-      }
+  broadcast.innerHTML = `
+
+    🚨 SOS BROADCAST ACTIVE
+
+    <br><br>
+
+    Location:
+
+    <br>
+
+    ${lat.toFixed(6)},
+    ${lng.toFixed(6)}
+
+    <br><br>
+
+    Accuracy: ${Math.round(
+      accuracy
+    )}m
+
+    <br><br>
+
+    Threat Level:
+
+    <br>
+
+    ${risk} RISK AREA
+
+    <br><br>
+
+    Emergency signal
+    sent successfully.
+
+  `;
+}
 
     },
 
     (err) => {
 
-      alert(
-        err.message
+      let errMsg =
+        "Unable to get location";
+
+      if (err.code === 1) {
+        errMsg =
+          "Permission denied. Please enable location access.";
+      } else if (err.code === 2) {
+        errMsg =
+          "Position unavailable. Try again.";
+      } else if (err.code === 3) {
+        errMsg =
+          "Location request timed out.";
+      }
+
+      alert(errMsg);
+      console.error(
+        "Geolocation error:",
+        err
       );
     },
 
     {
       enableHighAccuracy:
-        true
+        true,
+      timeout:
+        10000,
+      maximumAge:
+        0
     }
   );
 }
@@ -524,12 +578,78 @@ socket.on(
   "receive-sos",
   (data) => {
 
-    addSOSMarker(
-      data
+    const riskBox =
+      document.getElementById(
+        "riskLevel"
+      );
+
+    riskBox.innerHTML = `
+      ${data.disasterType}
+      <br><br>
+      ${data.assessment}
+    `;
+
+    const broadcast =
+      document.getElementById(
+        "broadcastText"
+      );
+
+    broadcast.innerHTML = `
+      🚨 Emergency Broadcast Active
+
+      <br><br>
+
+      Nearest Disaster:
+      <b>
+        ${data.disasterType}
+      </b>
+
+      <br><br>
+
+      Assessment:
+      <b>
+        ${data.assessment}
+      </b>
+
+      <br><br>
+
+      📍 LATITUDE:
+      ${Number(data.lat).toFixed(6)}
+
+      <br><br>
+
+      📍 LONGITUDE:
+      ${Number(data.lng).toFixed(6)}
+
+      <br><br>
+
+      Accuracy:
+      ${Math.round(
+        data.accuracy
+      )}m
+    `;
+
+    addFeed(data);
+
+    addSOSMarker(data);
+
+    map.setView(
+      [data.lat, data.lng],
+      12
     );
 
-    addFeed(
-      data
+    alert(
+`🚨 SOS RECEIVED
+
+Nearest Disaster:
+${data.disasterType}
+
+${data.assessment}
+
+Accuracy:
+${Math.round(
+  data.accuracy
+)}m`
     );
   }
 );
@@ -612,3 +732,103 @@ socket.on(
       el.remove();
   }
 );
+
+/* AUTO LOCATE ON LOAD */
+
+if (
+  navigator.geolocation &&
+  map
+) {
+
+  navigator.geolocation.getCurrentPosition(
+
+    (pos) => {
+
+      const lat =
+        pos.coords.latitude;
+
+      const lng =
+        pos.coords.longitude;
+
+      const accuracy =
+        pos.coords.accuracy;
+
+      console.log(
+        `User Location: ${lat}, ${lng} (Accuracy: ${accuracy}m)`
+      );
+
+      map.setView(
+        [lat, lng],
+        12
+      );
+
+      const userMarker =
+        L.circleMarker(
+          [lat, lng],
+          {
+            radius: 8,
+            color: "#00ff99",
+            fillColor: "#00ff99",
+            fillOpacity: 0.9,
+            weight: 2
+          }
+        ).addTo(map);
+
+      userMarker.bindPopup(`
+        <b>📍 Your Location</b>
+        <br>
+        ${lat.toFixed(6)},
+        ${lng.toFixed(6)}
+        <br>
+        Accuracy: ${Math.round(
+          accuracy
+        )}m
+      `);
+
+      const risk =
+        calculateRisk(
+          lat,
+          lng
+        );
+
+      setTimeout(
+        () => {
+
+          const riskEl =
+            document.getElementById(
+              "riskLevel"
+            );
+
+          if (riskEl) {
+
+            riskEl.innerText =
+              risk;
+
+            riskEl.className =
+              "risk " +
+              risk.toLowerCase();
+          }
+        },
+
+        500
+      );
+    },
+
+    (err) => {
+
+      console.warn(
+        "Auto-locate failed:",
+        err
+      );
+    },
+
+    {
+      enableHighAccuracy:
+        true,
+      timeout:
+        8000,
+      maximumAge:
+        0
+    }
+  );
+}

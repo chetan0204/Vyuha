@@ -4,6 +4,7 @@ const http = require("http");
 const { Server } = require("socket.io");
 const path = require("path");
 const axios = require("axios");
+const WEATHER_API_KEY = "9196d3efbc112fad4a24095bf3a27ea1";
 
 const app = express();
 
@@ -48,11 +49,6 @@ let connectedUsers = {};
 /* ACTIVE SOS */
 
 let activeSOS = [];
-
-/* WEATHER API */
-
-const WEATHER_API_KEY =
-  "9196d3efbc112fad4a24095bf3a27ea1";
 
 /* DISTANCE CALCULATION */
 
