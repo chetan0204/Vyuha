@@ -733,14 +733,16 @@ socket.on(
   }
 );
 
-/* AUTO LOCATE ON LOAD */
+/* AUTO LOCATE ON LOAD - HIGH ACCURACY */
+
+let userMarker;
 
 if (
   navigator.geolocation &&
   map
 ) {
 
-  navigator.geolocation.getCurrentPosition(
+  navigator.geolocation.watchPosition(
 
     (pos) => {
 
@@ -754,35 +756,74 @@ if (
         pos.coords.accuracy;
 
       console.log(
-        `User Location: ${lat}, ${lng} (Accuracy: ${accuracy}m)`
+        "GPS Accuracy:",
+        accuracy
       );
+
+      /* reject weak GPS */
+
+      if (
+        accuracy > 100
+      ) {
+
+        console.log(
+          "Weak GPS signal:",
+          accuracy
+        );
+
+        return;
+      }
+
+      /* center map */
 
       map.setView(
         [lat, lng],
-        12
+        14
       );
 
-      const userMarker =
+      /* remove old marker */
+
+      if (
+        userMarker
+      ) {
+
+        map.removeLayer(
+          userMarker
+        );
+      }
+
+      /* accurate marker */
+
+      userMarker =
         L.circleMarker(
           [lat, lng],
           {
-            radius: 8,
-            color: "#00ff99",
-            fillColor: "#00ff99",
-            fillOpacity: 0.9,
-            weight: 2
+            radius:8,
+            color:"#00ff99",
+            fillColor:"#00ff99",
+            fillOpacity:0.9,
+            weight:2
           }
         ).addTo(map);
 
       userMarker.bindPopup(`
-        <b>📍 Your Location</b>
+
+        <b>
+          📍 Your Location
+        </b>
+
         <br>
+
         ${lat.toFixed(6)},
         ${lng.toFixed(6)}
+
         <br>
-        Accuracy: ${Math.round(
+
+        Accuracy:
+        ${Math.round(
           accuracy
         )}m
+
       `);
 
       const risk =
@@ -791,41 +832,42 @@ if (
           lng
         );
 
-      setTimeout(
-        () => {
+      const riskEl =
+        document.getElementById(
+          "riskLevel"
+        );
 
-          const riskEl =
-            document.getElementById(
-              "riskLevel"
-            );
+      if (
+        riskEl
+      ) {
 
-          if (riskEl) {
+        riskEl.innerText =
+          risk;
 
-            riskEl.innerText =
-              risk;
+        riskEl.className =
+          "risk " +
+          risk.toLowerCase();
+      }
 
-            riskEl.className =
-              "risk " +
-              risk.toLowerCase();
-          }
-        },
-
-        500
-      );
     },
 
     (err) => {
 
       console.warn(
-        "Auto-locate failed:",
+        "GPS failed:",
         err
       );
     },
 
-{
-  enableHighAccuracy:true,
-  timeout:15000,
-  maximumAge:0
-}
+    {
+
+      enableHighAccuracy:true,
+
+      timeout:20000,
+
+      maximumAge:0
+
+    }
+
   );
 }
